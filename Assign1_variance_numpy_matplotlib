@@ -1,0 +1,46 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Set random seed for reproducibility
+np.random.seed(42)
+
+# =====================================================================
+# Q2: Generate Synthetic 2D Correlated Gaussian Dataset
+# =====================================================================
+n_samples = 300
+mean = np.array([0, 0])
+# Define a highly correlated covariance structure
+covariance = np.array([
+    [3.0, 2.5],
+    [2.5, 3.0]
+])
+
+# Generate dataset X of shape (n_samples, n_features)
+X = np.random.multivariate_normal(mean, covariance, size=n_samples)
+
+# =====================================================================
+# Q3: Implement PCA from Scratch using NumPy
+# =====================================================================
+# Step 1: Center your dataset (mean subtraction)
+X_mean = np.mean(X, axis=0)
+X_centered = X - X_mean
+
+# Step 2: Compute the covariance matrix
+cov_matrix = np.cov(X_centered, rowvar=False)
+
+# Step 3: Find eigenvalues and eigenvectors
+eigenvalues, eigenvectors = np.linalg.eigh(cov_matrix)
+
+# Sort them in descending order (highest eigenvalues first)
+idx = np.argsort(eigenvalues)[::-1]
+eigenvalues = eigenvalues[idx]
+eigenvectors = eigenvectors[:, idx]
+
+# =====================================================================
+# Q4: Proportion of Total Variance Explained
+# =====================================================================
+total_variance = np.sum(eigenvalues)
+prop_variance_explained = eigenvalues / total_variance
+
+print(f"Eigenvalues: {eigenvalues}")
+print(f"Proportion of Variance Explained: {prop_variance_explained}")
